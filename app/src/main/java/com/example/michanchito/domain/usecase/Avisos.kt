@@ -7,11 +7,10 @@ import com.example.michanchito.domain.model.Presupuesto
 import java.time.LocalDate
 import java.time.YearMonth
 
-/** Un aviso: el título va en negrita (y como título de la notificación), el texto debajo. */
+/** Un aviso: el título (también es el título de la notificación) y el texto debajo. */
 data class Aviso(
     val titulo: String,
-    val texto: String,
-    val urgente: Boolean      // rojo en Inicio; en notificaciones no cambia nada
+    val texto: String
 )
 
 /*
@@ -38,13 +37,11 @@ object Avisos {
             when {
                 gastado >= limite.limiteCentavos -> Aviso(
                     titulo = "Te pasaste del límite de $nombre.",
-                    texto = "Llevas ${Dinero.formatear(gastado)} de ${Dinero.formatear(limite.limiteCentavos)}. $cierre",
-                    urgente = true
+                    texto = "Llevas ${Dinero.formatear(gastado)} de ${Dinero.formatear(limite.limiteCentavos)}. $cierre"
                 )
                 gastado * 100 >= limite.limiteCentavos * 80 -> Aviso(
                     titulo = "Ya usaste más del 80 % del límite de $nombre.",
-                    texto = "Te quedan ${Dinero.formatear(limite.limiteCentavos - gastado)}. $cierre",
-                    urgente = true
+                    texto = "Te quedan ${Dinero.formatear(limite.limiteCentavos - gastado)}. $cierre"
                 )
                 else -> null
             }

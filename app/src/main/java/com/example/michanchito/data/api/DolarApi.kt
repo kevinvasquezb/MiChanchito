@@ -22,9 +22,9 @@ import kotlin.math.roundToLong
  * Después lo traducimos a Cotizacion (domain), con los precios en centavos.
  */
 
-/** Tal cual llega de la API. "Dto" = objeto de transferencia de datos. */
+/** Lo que usamos de la respuesta de la API. "Dto" = objeto de transferencia de datos.
+ *  Gson ignora los campos del JSON que no están aquí (moneda, casa, nombre). */
 data class CotizacionDto(
-    val nombre: String? = null,
     val compra: Double? = null,
     val venta: Double? = null,
     val fechaActualizacion: String? = null
@@ -50,12 +50,11 @@ object DolarServicio {
 
     /** Pide las dos cotizaciones. Lanza excepción si no hay internet o la API falla: quien llama decide qué hacer. */
     suspend fun consultar(): Dolar = Dolar(
-        oficial = api.oficial().aCotizacion("Oficial"),
-        paralelo = api.binance().aCotizacion("Paralelo")
+        oficial = api.oficial().aCotizacion(),
+        paralelo = api.binance().aCotizacion()
     )
 
-    private fun CotizacionDto.aCotizacion(nombrePorDefecto: String) = Cotizacion(
-        nombre = nombre ?: nombrePorDefecto,
+    private fun CotizacionDto.aCotizacion() = Cotizacion(
         compraCentavos = ((compra ?: 0.0) * 100).roundToLong(),
         ventaCentavos = ((venta ?: 0.0) * 100).roundToLong(),
         fecha = (fechaActualizacion ?: "").take(10)   // "2026-10-15T00:00:00.000Z" -> "2026-10-15"

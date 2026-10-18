@@ -66,7 +66,7 @@ fun InicioScreen(
         if (estado.disponible < 0) {
             item { Aviso("Tu disponible es negativo: gastaste dinero que tenías apartado en metas.", esError = true) }
         }
-        items(avisos) { aviso -> Aviso("${aviso.titulo} ${aviso.texto}", esError = aviso.urgente) }
+        items(avisos) { aviso -> Aviso("${aviso.titulo} ${aviso.texto}", esError = true) }
 
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {

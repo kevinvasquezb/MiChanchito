@@ -18,7 +18,7 @@ sequenceDiagram
     U->>C: elige su cuenta
     C-->>H: GoogleIdTokenCredential (ID token firmado por Google)
     H->>F: signInWithCredential(GoogleAuthProvider.getCredential(idToken)).await()
-    F-->>H: FirebaseUser (uid, nombre, correo, foto)
+    F-->>H: FirebaseUser (uid, nombre, correo)
     F-->>A: AuthStateListener: usuario = FirebaseUser
     A-->>N: estado.usuario ya no es null
     N->>V: conectar(usuario)

@@ -2,7 +2,7 @@ package com.example.michanchito.domain.model
 
 /*
  * Firestore: usuarios/{uid}
- *   { "nombre": "Mirko", "correo": "...", "fotoUrl": "...", "saldoInicialCentavos": 50000 }
+ *   { "nombre": "Mirko", "correo": "...", "saldoInicialCentavos": 50000 }
  *
  * saldoInicialCentavos = null  ->  todavía no configuró su saldo (mostramos esa pantalla).
  */

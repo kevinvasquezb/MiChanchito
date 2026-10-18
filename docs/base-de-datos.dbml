@@ -47,7 +47,6 @@ Table usuarios [headercolor: #6550A4] {
   uid string [pk, note: 'Nombre del documento = UID que entrega Firebase Auth']
   nombre string [not null, note: 'De la cuenta de Google']
   correo string [not null]
-  fotoUrl string
   saldoInicialCentavos number [null, note: 'Vacío hasta que el usuario lo configura la primera vez']
 
   Note: 'Ruta: usuarios/{uid}'

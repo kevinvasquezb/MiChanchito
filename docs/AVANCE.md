@@ -80,6 +80,7 @@
 | Ícono de la app no adaptativo | Ícono adaptativo con el logo |
 | Verde y rojo poco legibles en tema oscuro (v2) | Colores semánticos en el `ColorScheme`, aclarados en oscuro |
 | Mi perfil no tenía flecha de regreso (v2, reportado por Mirko) | Barra superior con título de la pantalla y `navigationIcon` ← que hace `popBackStack()`; la pantalla se apila sobre la actual |
+| `Unresolved reference: icons` al compilar (reportado por Mirko, 16/10) | Agregada la dependencia `androidx.compose.material:material-icons-core` (Material 3 ya no la incluye) |
 
 ## 4. Qué falta para terminar (en orden)
 
@@ -102,7 +103,7 @@
 | Ofrecer "¿activar huella?" justo después del primer login | Baja | `AuthViewModel` + un `AlertDialog` en `AppNavigation` |
 | Pedir huella también al volver de segundo plano | Baja | Observar `ON_STOP` y poner `biometriaValidada = false` |
 | Editar nombre u objetivo de una meta | Baja | Un diálogo más + `update` en el repositorio |
-| Mostrar la foto de Google en Mi perfil | Baja | Ya se guarda `fotoUrl`; falta la librería Coil |
+| Mostrar la foto de Google en Mi perfil | Baja | Guardar `fotoUrl` en `usuarios/{uid}` y agregar la librería Coil para cargar la imagen |
 | Íconos vectoriales en la barra de pestañas | Baja | Ver `13_Diseno_UX_UI.md` |
 | Widget de pantalla de inicio con el disponible | Media | Glance |
 | Precios de referencia de la canasta familiar (curados desde el OAP) | Media | Ver `12_Ideas_de_mejora_y_APIs.md`, idea 9 |

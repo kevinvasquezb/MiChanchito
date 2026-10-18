@@ -20,7 +20,7 @@ import com.google.firebase.firestore.SetOptions
  * REPOSITORIO = el ÚNICO archivo que habla con Firestore.
  * Ni las pantallas ni los ViewModels usan FirebaseFirestore directamente.
  *
- *   usuarios/{uid}                        nombre, correo, fotoUrl, saldoInicialCentavos
+ *   usuarios/{uid}                        nombre, correo, saldoInicialCentavos
  *   usuarios/{uid}/movimientos/{id}       tipo, montoCentavos, categoriaId, fecha, descripcion
  *   usuarios/{uid}/metas/{id}             nombre, objetivoCentavos, ahorradoCentavos, fechaObjetivo
  *   usuarios/{uid}/presupuestos/{catId}   categoriaId, limiteCentavos
@@ -46,8 +46,7 @@ class FinanzasRepositorio(
     fun guardarDatosDeGoogle(usuarioGoogle: FirebaseUser) {
         val datos = mapOf(
             "nombre" to (usuarioGoogle.displayName ?: "Usuario"),
-            "correo" to (usuarioGoogle.email ?: ""),
-            "fotoUrl" to (usuarioGoogle.photoUrl?.toString() ?: "")
+            "correo" to (usuarioGoogle.email ?: "")
         )
         usuario.set(datos, SetOptions.merge()).addOnFailureListener { avisar("guardar tu perfil", it) }
     }
