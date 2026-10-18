@@ -1,0 +1,23 @@
+%% Pantallas y diálogos dentro de la app (PantallasPrincipales.kt)
+flowchart TD
+    subgraph barra["Barra de pestañas (abajo)"]
+        direction LR
+        I["⌂ Inicio<br/>ruta: inicio"]
+        M["↕ Historial<br/>ruta: movimientos"]
+        ME["◎ Metas<br/>ruta: metas"]
+        LI["◉ Límites<br/>ruta: limites"]
+        R["▥ Reportes<br/>ruta: reportes"]
+    end
+    TOP["Barra superior<br/>botón Mi perfil"] --> P["Mi perfil<br/>ruta: perfil"]
+    I -- "Ver todos" --> M
+    I -- "Ver metas" --> ME
+    I -- "botones Ingreso / Gasto" --> DM{{"DialogoMovimiento"}}
+    I -- "tocar un movimiento" --> DM
+    M -- "botón agregar o tocar uno" --> DM
+    ME -- "botón Nueva meta" --> DNM{{"DialogoNuevaMeta"}}
+    ME -- "Aportar / Retirar" --> DA{{"DialogoAporte"}}
+    LI -- "Poner límite / Cambiar" --> DMO{{"DialogoMonto"}}
+    P -- "Saldo inicial · Cambiar" --> DMO
+    P -- "Cerrar sesión" --> CS{{"¿Cerrar tu sesión?"}}
+    CS -- "confirmar" --> LOGIN["LoginScreen"]
+    P -. "flecha ← · vuelve a la pantalla anterior" .-> I

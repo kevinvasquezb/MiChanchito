@@ -1,0 +1,21 @@
+%% El "portero": qué pantalla se muestra al abrir la app (AppNavigation.kt)
+flowchart TD
+    A(["Abrir Mi Chanchito"]) --> C0{"¿Ya leyó las<br/>preferencias?<br/>DataStore"}
+    C0 -- "no" --> R0["Ruedita"]
+    R0 -.-> C0
+    C0 -- "sí" --> B{"¿Hay sesión<br/>de Firebase?"}
+    B -- "no" --> L["LoginScreen<br/>Continuar con Google"]
+    L -- "entra con Google" --> B
+    B -- "sí" --> D{"¿Huella activada<br/>y no validada?"}
+    D -- "sí" --> E["BiometriaScreen<br/>huella, rostro o PIN"]
+    E -- "ok" --> D
+    E -- "Entrar con otra cuenta" --> L
+    D -- "no" --> F{"¿Falló la lectura<br/>de Firestore?"}
+    F -- "sí" --> ERR["PantallaError<br/>Reintentar · Cerrar sesión"]
+    ERR -- "Reintentar" --> F
+    F -- "no" --> G{"¿Ya sabemos<br/>su saldo inicial?"}
+    G -- "todavía no" --> R1["Ruedita<br/>Cargando tus datos…"]
+    R1 -.-> G
+    G -- "no tiene" --> S["SaldoInicialScreen<br/>Empecemos por tu saldo"]
+    S -- "guarda" --> G
+    G -- "sí tiene" --> H[["PantallasPrincipales<br/>Inicio · Historial · Metas · Límites · Reportes"]]

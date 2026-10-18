@@ -1,0 +1,21 @@
+%% Qué pasa cuando guardas un gasto
+sequenceDiagram
+    actor U as Usuario
+    participant D as DialogoMovimiento
+    participant VM as FinanzasViewModel
+    participant R as FinanzasRepositorio
+    participant C as Caché del celular
+    participant F as Firestore (nube)
+    U->>D: escribe 25,50 · Alimentación · Guardar
+    D->>D: valida la fecha y Dinero.aCentavos("25,50") = 2550
+    alt monto o fecha inválidos
+        D-->>U: muestra el error y no se cierra
+    else todo bien
+        D->>VM: guardarMovimiento(null, GASTO, 2550, "comida", fecha, desc)
+        VM->>R: guardarMovimiento(movimiento con id nuevo)
+        R->>C: set(usuarios/{uid}/movimientos/{id})
+        C-->>R: listener: lista nueva (al instante)
+        R-->>VM: estado.movimientos = lista nueva
+        VM-->>U: Snackbar "Gasto guardado." · saldo recalculado
+        C-)F: sube el documento cuando hay internet
+    end

@@ -1,0 +1,29 @@
+%% Avisos diarios con WorkManager (NotificacionesHelper.kt + AvisosWorker.kt)
+sequenceDiagram
+    actor U as Usuario
+    participant P as PerfilScreen / PantallasPrincipales
+    participant A as AuthViewModel
+    participant H as NotificacionesHelper
+    participant W as WorkManager (Android)
+    participant K as AvisosWorker
+    participant F as Firestore (caché o nube)
+    participant D as domain · Avisos
+    rect rgb(237, 231, 250)
+    Note over U,W: 1. Activar (una sola vez)
+    U->>P: enciende "Avisos diarios"
+    P->>P: ¿permiso POST_NOTIFICATIONS? (Android 13+) → lo pide
+    P->>A: cambiarAvisos(true)
+    A->>H: programarDiarios(reiniciar = true)
+    H->>W: enqueueUniquePeriodicWork("avisos_diarios", cada 24 h, primera vez a las 9:00)
+    A->>A: DataStore avisos_activados = true
+    end
+    rect rgb(231, 245, 240)
+    Note over W,U: 2. Cada día a las 9:00, aunque la app esté cerrada
+    W->>K: doWork()
+    K->>F: get() movimientos y presupuestos
+    F-->>K: documentos
+    K->>D: Avisos.limites(presupuestos, movimientos, hoy)
+    D-->>K: lista de Aviso(titulo, texto)
+    K->>H: mostrar(id, titulo, texto) por cada aviso
+    H-->>U: 🔔 "Alimentación: te quedan Bs 80,00. Faltan 16 días para fin de mes."
+    end

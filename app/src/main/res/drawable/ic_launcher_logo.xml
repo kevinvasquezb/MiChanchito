@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- El logo con margen, para que quepa en la zona segura del ícono adaptable (círculo, gota, etc.) -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/chanchito_logo"
+    android:inset="18%" />

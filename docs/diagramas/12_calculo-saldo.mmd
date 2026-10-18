@@ -1,0 +1,15 @@
+%% Cómo se calculan los saldos (CalculosFinanzas.kt). Nada de esto se guarda.
+flowchart LR
+    SI["Saldo inicial<br/>usuarios/{uid}.saldoInicialCentavos<br/><b>800</b>"]
+    IN["Σ ingresos<br/>movimientos tipo INGRESO<br/><b>3.650</b>"]
+    GA["Σ gastos<br/>movimientos tipo GASTO<br/><b>2.405</b>"]
+    AH["Σ ahorrado<br/>metas.ahorradoCentavos<br/><b>1.000</b>"]
+    T(["Saldo total<br/>800 + 3.650 − 2.405<br/><b>Bs 2.045,00</b>"])
+    RE(["Reservado<br/><b>Bs 1.000,00</b>"])
+    DI(["Disponible<br/>2.045 − 1.000<br/><b>Bs 1.045,00</b>"])
+    SI -- "suma" --> T
+    IN -- "suma" --> T
+    GA -- "resta" --> T
+    AH --> RE
+    T --> DI
+    RE -- "resta" --> DI

@@ -1,0 +1,87 @@
+// =====================================================================
+// Mi Chanchito — Base de datos NoSQL (Cloud Firestore)
+// Pegar en https://dbdiagram.io  (Create your diagram -> pegar todo)
+//
+// CÓMO LEER ESTE DIAGRAMA (Firestore no tiene tablas):
+//   - Cada "Table" es una COLECCIÓN y cada fila sería un DOCUMENTO (tipo JSON).
+//   - movimientos, metas y presupuestos son SUBCOLECCIONES
+//     que viven DENTRO de cada usuario:  usuarios/{uid}/movimientos/{id}
+//   - La columna "uid" de las subcolecciones NO se guarda como campo:
+//     es la RUTA (la carpeta del usuario). Se dibuja para mostrar la relación.
+//   - Es un ÁRBOL: todo cuelga de usuarios. No hay ciclos ni relaciones
+//     entre subcolecciones.
+//   - Las categorías NO son una colección: son una lista fija en el código
+//     (Categoria.kt). Por eso aparecen como Enum.
+//   - Todo el dinero va en CENTAVOS enteros: Bs 25,50 = 2550.
+// =====================================================================
+
+Project MiChanchito {
+  database_type: 'Cloud Firestore (NoSQL)'
+  Note: 'App de finanzas personales. Login con Google (Firebase Auth). Cada usuario solo lee y escribe dentro de usuarios/{uid}.'
+}
+
+// ---------------------------- Valores fijos ----------------------------
+
+Enum tipo_movimiento {
+  INGRESO
+  GASTO
+}
+
+Enum categoria_id {
+  sueldo [note: 'INGRESO 💼']
+  extra [note: 'INGRESO ✨']
+  regalo [note: 'INGRESO 🎁']
+  otros_ingresos [note: 'INGRESO']
+  comida [note: 'GASTO 🍽 Alimentación']
+  transporte [note: 'GASTO 🚌']
+  hogar [note: 'GASTO 🏠']
+  estudios [note: 'GASTO 📚']
+  salud [note: 'GASTO 💚']
+  ocio [note: 'GASTO 🎬']
+  otros_gastos [note: 'GASTO']
+}
+
+// ---------------------------- Colección raíz ----------------------------
+
+Table usuarios [headercolor: #6550A4] {
+  uid string [pk, note: 'Nombre del documento = UID que entrega Firebase Auth']
+  nombre string [not null, note: 'De la cuenta de Google']
+  correo string [not null]
+  fotoUrl string
+  saldoInicialCentavos number [null, note: 'Vacío hasta que el usuario lo configura la primera vez']
+
+  Note: 'Ruta: usuarios/{uid}'
+}
+
+// ---------------------------- Subcolecciones ----------------------------
+
+Table movimientos [headercolor: #187D66] {
+  uid string [ref: > usuarios.uid, note: 'RUTA, no campo: usuarios/{uid}/movimientos']
+  id string [pk, note: 'Id automático de Firestore']
+  tipo tipo_movimiento [not null]
+  montoCentavos number [not null, note: 'Siempre positivo']
+  categoriaId categoria_id [not null]
+  fecha string [not null, note: 'Texto "yyyy-MM-dd", por ejemplo "2026-10-15"']
+  descripcion string [note: 'Opcional, máximo 200 caracteres']
+
+  Note: 'Ruta: usuarios/{uid}/movimientos/{id} — ingresos y gastos'
+}
+
+Table metas [headercolor: #6550A4] {
+  uid string [ref: > usuarios.uid, note: 'RUTA, no campo: usuarios/{uid}/metas']
+  id string [pk, note: 'Id automático de Firestore']
+  nombre string [not null]
+  objetivoCentavos number [not null]
+  ahorradoCentavos number [not null, default: 0, note: 'Se suma o resta con FieldValue.increment']
+  fechaObjetivo string [note: '"" = sin fecha']
+
+  Note: 'Ruta: usuarios/{uid}/metas/{id} — dinero apartado (no es gasto)'
+}
+
+Table presupuestos [headercolor: #BA374B] {
+  uid string [ref: > usuarios.uid, note: 'RUTA, no campo: usuarios/{uid}/presupuestos']
+  categoriaId categoria_id [pk, note: 'El id del documento ES la categoría: un solo límite por categoría']
+  limiteCentavos number [not null, note: 'Límite mensual']
+
+  Note: 'Ruta: usuarios/{uid}/presupuestos/{categoriaId} — límite mensual por categoría de gasto'
+}

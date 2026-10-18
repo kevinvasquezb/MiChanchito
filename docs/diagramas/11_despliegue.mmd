@@ -1,0 +1,39 @@
+%% Dónde corre cada pieza
+flowchart LR
+    subgraph PC["💻 PC de desarrollo"]
+        AS["Android Studio + Gradle"]
+        JSON["app/google-services.json"]
+        KEY["debug.keystore<br/>(su SHA-1)"]
+    end
+    subgraph CEL["📱 Celular (Android 9+)"]
+        APK["Mi Chanchito<br/>com.michanchito.app"]
+        CM["Credential Manager<br/>cuentas de Google"]
+        BIO["BiometricPrompt<br/>huella · rostro · PIN"]
+        DS[("DataStore<br/>tema, huella, avisos")]
+        CACHE[("Caché offline<br/>de Firestore")]
+        WM["WorkManager<br/>AvisosWorker a las 9:00"]
+    end
+    subgraph OTROS["☁️ Otros servicios"]
+        DAPI["dolarapi.com<br/>dólar oficial (BCB) y Binance P2P"]
+    end
+    subgraph NUBE["☁️ Google / Firebase"]
+        GID["Google Identity<br/>emite el ID token"]
+        FA["Firebase Authentication<br/>recibe el ID token y da el UID"]
+        RULES{{"Reglas de seguridad"}}
+        FS[("Cloud Firestore<br/>southamerica-east1")]
+    end
+    JSON --> AS
+    KEY --> AS
+    AS -- "APK firmado" --> APK
+    APK --> CM
+    APK --> BIO
+    APK --> DS
+    APK --> CACHE
+    APK -- "HTTPS · Retrofit" --> DAPI
+    WM --> CACHE
+    CM -- "HTTPS" --> GID
+    APK --> FA
+    CACHE -- "sincroniza (HTTPS)" --> RULES
+    RULES --> FS
+    FA -. "request.auth.uid" .-> RULES
+    KEY -. "SHA-1 registrado en<br/>la consola de Firebase" .-> GID

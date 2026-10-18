@@ -1,0 +1,6 @@
+%% Estructura de Firestore de Mi Chanchito (árbol, sin ciclos)
+flowchart LR
+    U[("usuarios<br/>(colección)")] --> D["{uid}<br/>nombre, correo, fotoUrl<br/>saldoInicialCentavos"]
+    D --> M[("movimientos")] --> M1["{id automático}<br/>tipo, montoCentavos, categoriaId<br/>fecha, descripcion"]
+    D --> T[("metas")] --> T1["{id automático}<br/>nombre, objetivoCentavos<br/>ahorradoCentavos, fechaObjetivo"]
+    D --> P[("presupuestos")] --> P1["{categoriaId}<br/>categoriaId, limiteCentavos"]

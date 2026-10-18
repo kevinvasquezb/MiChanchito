@@ -1,0 +1,26 @@
+%% Login con Google paso a paso (GoogleAuthHelper.kt)
+sequenceDiagram
+    autonumber
+    actor U as Usuario
+    participant L as LoginScreen
+    participant A as AuthViewModel
+    participant H as GoogleAuthHelper
+    participant C as Credential Manager
+    participant F as Firebase Auth
+    participant N as AppNavigation
+    participant V as FinanzasViewModel
+    U->>L: toca "Continuar con Google"
+    L->>A: iniciarSesionConGoogle(activity)
+    A->>A: iniciandoSesion = true · biometriaValidada = true
+    A->>H: iniciarSesion()
+    H->>C: getCredential(GetSignInWithGoogleOption(default_web_client_id))
+    C-->>U: selector de cuentas de Google
+    U->>C: elige su cuenta
+    C-->>H: GoogleIdTokenCredential (ID token firmado por Google)
+    H->>F: signInWithCredential(GoogleAuthProvider.getCredential(idToken)).await()
+    F-->>H: FirebaseUser (uid, nombre, correo, foto)
+    F-->>A: AuthStateListener: usuario = FirebaseUser
+    A-->>N: estado.usuario ya no es null
+    N->>V: conectar(usuario)
+    V->>V: guardarDatosDeGoogle + 4 listeners
+    Note over N: el portero pasa a la siguiente pantalla

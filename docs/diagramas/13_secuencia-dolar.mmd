@@ -1,0 +1,19 @@
+%% Consumo de la API REST del dólar (DolarApi.kt, Retrofit)
+sequenceDiagram
+    autonumber
+    participant N as AppNavigation
+    participant VM as FinanzasViewModel
+    participant S as DolarServicio (Retrofit)
+    participant A as bo.dolarapi.com
+    participant I as InicioScreen
+    N->>VM: conectar(usuario) → cargarDolar()
+    VM->>VM: cargandoDolar = true
+    VM->>S: consultar()  (dentro de viewModelScope.launch)
+    S->>A: GET /v1/dolares/oficial
+    A-->>S: JSON { compra: 11.68, venta: 11.68, ... }
+    S->>A: GET /v1/dolares/binance
+    A-->>S: JSON { compra: 11.84, venta: 11.89, ... }
+    S->>S: Gson → CotizacionDto → Cotizacion (centavos: 1184)
+    S-->>VM: Dolar(oficial, paralelo)
+    VM-->>I: estado.dolar → tarjeta "Dólar hoy" + disponible en US$
+    Note over VM,I: Sin internet: excepción → errorDolar = true → botón "Reintentar". La app sigue igual.

@@ -1,0 +1,48 @@
+%% Capas de Mi Chanchito (MVVM con carpetas de Clean Architecture). Flecha = "usa a".
+flowchart TD
+    subgraph presentation["presentation · lo que se ve"]
+        NAV["navigation<br/>AppNavigation · PantallasPrincipales"]
+        UI["ui<br/>pantallas y diálogos"]
+        VM["viewModel<br/>AuthViewModel · FinanzasViewModel"]
+        NAV --> UI
+        NAV --> VM
+    end
+    subgraph domain["domain · reglas"]
+        UC["usecase<br/>CalculosFinanzas · Avisos · Fechas"]
+        MO["model<br/>Movimiento · Meta · Presupuesto · Dolar · Perfil · Categoria · Dinero"]
+    end
+    subgraph data["data · datos"]
+        REPO["repository<br/>FinanzasRepositorio"]
+        DBM["database<br/>DocumentosFirestore"]
+        GAH["api<br/>GoogleAuthHelper"]
+        BH["api<br/>BiometricHelper"]
+        DOL["api<br/>DolarApi (Retrofit)"]
+        NOT["notificaciones<br/>NotificacionesHelper · AvisosWorker"]
+        DS["datastore<br/>PreferenciasApp"]
+    end
+    subgraph fuera["fuera de nuestro código"]
+        FS[("Cloud Firestore")]
+        FA[("Firebase Auth")]
+        BIO[("BiometricPrompt")]
+        PREF[("Archivo DataStore")]
+        API[("dolarapi.com")]
+        WM[("WorkManager")]
+    end
+    VM --> UC
+    VM --> REPO
+    VM --> GAH
+    VM --> DOL
+    VM --> NOT
+    VM --> DS
+    NAV -. "necesita la Activity" .-> BH
+    UI -. "BiometriaScreen" .-> BH
+    UC --> MO
+    REPO --> DBM
+    REPO --> FS
+    GAH --> FA
+    BH --> BIO
+    DOL --> API
+    NOT --> WM
+    NOT --> UC
+    NOT --> FS
+    DS --> PREF

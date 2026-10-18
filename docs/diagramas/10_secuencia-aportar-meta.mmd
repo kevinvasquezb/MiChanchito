@@ -1,0 +1,22 @@
+%% Aportar a una meta (apartar dinero, no gastarlo)
+sequenceDiagram
+    actor U as Usuario
+    participant D as DialogoAporte
+    participant VM as FinanzasViewModel
+    participant C as CalculosFinanzas
+    participant R as FinanzasRepositorio
+    participant F as Firestore
+    U->>D: escribe 200 · Aportar
+    D->>VM: aportarAMeta(meta, 20000)
+    VM->>C: errorAlAportar(20000, meta, disponible)
+    alt no alcanza el disponible o supera lo que falta
+        C-->>VM: "No tienes suficiente dinero disponible…"
+        VM-->>D: devuelve el mensaje
+        D-->>U: muestra el error, el diálogo sigue abierto
+    else se puede
+        C-->>VM: null
+        VM->>R: cambiarAhorroDeMeta(id, +20000)
+        R->>F: update(ahorradoCentavos, FieldValue.increment(20000))
+        F-->>VM: listener de metas: meta actualizada
+        VM-->>U: reservado +200 · disponible −200 · saldo total igual
+    end

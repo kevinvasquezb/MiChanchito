@@ -1,0 +1,33 @@
+%% Casos de uso de Mi Chanchito
+flowchart LR
+    U(("👤<br/>Usuario"))
+    G[["Google +<br/>Firebase Auth"]]
+    S[["Sistema del celular<br/>(huella / rostro / PIN)"]]
+    subgraph APP["Mi Chanchito"]
+        direction TB
+        CU1(["CU-01 Iniciar sesión con Google"])
+        CU2(["CU-02 Desbloquear con huella"])
+        CU3(["CU-03 Configurar saldo inicial"])
+        CU4(["CU-04 Registrar ingreso o gasto"])
+        CU5(["CU-05 Editar o eliminar movimiento"])
+        CU6(["CU-06 Buscar y filtrar historial"])
+        CU7(["CU-07 Crear o eliminar meta"])
+        CU8(["CU-08 Aportar o retirar de meta"])
+        CU9(["CU-09 Poner límite mensual"])
+        CU10(["CU-10 Ver reporte del mes"])
+        CU11(["CU-11 Personalizar: tema y huella"])
+        CU12(["CU-12 Cerrar sesión"])
+        CU13(["CU-13 Ver el dólar y su disponible en USD"])
+        CU14(["CU-14 Recibir avisos diarios"])
+    end
+    D[["dolarapi.com<br/>(BCB · Binance P2P)"]]
+    W[["WorkManager<br/>(Android)"]]
+    U --- CU1 & CU2 & CU3 & CU4 & CU5 & CU6
+    U --- CU7 & CU8 & CU9 & CU10 & CU11 & CU12
+    U --- CU13 & CU14
+    CU1 --- G
+    CU12 --- G
+    CU2 --- S
+    CU11 --- S
+    CU13 --- D
+    CU14 --- W

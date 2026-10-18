@@ -1,0 +1,34 @@
+%% Huella: activarla en Mi perfil y usarla al abrir la app
+sequenceDiagram
+    actor U as Usuario
+    participant P as PerfilScreen / PantallasPrincipales
+    participant BS as BiometriaScreen
+    participant B as BiometricHelper
+    participant S as BiometricPrompt (sistema)
+    participant A as AuthViewModel
+    participant D as DataStore
+    participant N as AppNavigation
+    rect rgb(237, 231, 250)
+    Note over U,D: 1. Activar (una sola vez)
+    U->>P: enciende "Pedir huella al abrir"
+    P->>B: PantallasPrincipales llama autenticar(activity)
+    B->>S: muestra la ventana
+    U->>S: pone huella, rostro o PIN
+    S-->>B: onAuthenticationSucceeded
+    B-->>P: alExito
+    P->>A: cambiarBiometria(true)
+    A->>D: biometria_activada = true
+    end
+    rect rgb(231, 245, 240)
+    Note over U,N: 2. Cada vez que abre la app
+    N->>A: ¿biometriaActivada y no validada?
+    A-->>N: sí
+    N->>BS: muestra "Tu dinero es personal"
+    BS->>B: estaDisponible? → autenticar
+    B->>S: ventana de huella
+    U->>S: pone su huella
+    S-->>B: ok
+    B-->>BS: alExito
+    BS->>A: onBiometriaValidada()
+    A-->>N: biometriaValidada = true → sigue a Inicio
+    end

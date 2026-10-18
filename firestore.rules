@@ -1,0 +1,14 @@
+// Reglas de seguridad de Firestore para Mi Chanchito.
+// Cópialas en: Firebase Console -> Firestore Database -> Reglas -> Publicar.
+//
+// Qué dicen: cada persona solo puede leer y escribir lo que está dentro de
+// usuarios/{su propio uid}/...  (su documento y sus subcolecciones).
+// Si no inició sesión, o el uid no es el suyo, Firestore responde PERMISSION_DENIED.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /usuarios/{uid}/{documento=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
